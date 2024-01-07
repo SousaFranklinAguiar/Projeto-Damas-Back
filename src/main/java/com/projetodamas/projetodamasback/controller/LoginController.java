@@ -33,11 +33,12 @@ public class LoginController {
     public String signin(@RequestBody User user){
 
         try {
+            // Verificar se o CPF existe
+            userService.verificaValidadeCpf(user);
             // Verificar se o CPF já está cadastrado
             userService.verificaCpf(user);
             // Verificar se o email já está cadastrado
             userService.verificaEmail(user);
-
             // Lógica de cadastro de usuário
             userService.createUser(user);
 

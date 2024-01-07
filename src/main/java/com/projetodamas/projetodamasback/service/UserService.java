@@ -1,14 +1,17 @@
 package com.projetodamas.projetodamasback.service;
 
+import br.com.caelum.stella.ValidationMessage;
+import br.com.caelum.stella.validation.CPFValidator;
 import com.projetodamas.projetodamasback.exceptions.ErrorException;
 import com.projetodamas.projetodamasback.model.User;
 import com.projetodamas.projetodamasback.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -51,6 +54,15 @@ public class UserService {
         if(!(userSalvo == null)){
             throw new ErrorException("E-mail já cadastrado.");
         }
+    }
+
+    public void verificaValidadeCpf(User user){
+        CPFValidator cpfValidator = new CPFValidator();
+
+        List<ValidationMessage> listValidation = cpfValidator.invalidMessagesFor(user.getCpf());
+
+        if(listValidation.size() > 0) throw new ErrorException("CPF Inválido");
+
     }
 
     public ResponseEntity<?> realizarLogin(User user){
